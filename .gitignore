@@ -1,0 +1,22 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+.env
+
+# Flask/Uploads (Don't upload users' test images to GitHub)
+static/uploads/*
+!static/uploads/.gitkeep
+
+# IDE files
+.vscode/
+.idea/
+.DS_Store
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
