@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - PneumoAI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white !important;
+        }
+        
+        .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+            margin: 0 10px;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover {
+            color: white !important;
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 80px 0 60px;
+            margin-bottom: 60px;
+        }
+        
+        .content-section {
+            padding: 60px 0;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #2d3748;
+        }
+        
+        .tech-badge {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border-radius: 50px;
+            margin: 5px;
+            font-weight: 500;
+        }
+        
+        .metric-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.08);
+            text-align: center;
+            height: 100%;
+        }
+        
+        .metric-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        
+        .metric-label {
+            color: #718096;
+            font-size: 1.1rem;
+        }
+        
+        .architecture-box {
+            background: #f8f9fa;
+            border-left: 4px solid var(--primary);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 15px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .feature-list i {
+            color: var(--primary);
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+        
+        footer {
+            background: #2d3748;
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 80px;
+        }
+        
+        .disclaimer-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-lungs"></i> PneumoAI
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/predict">Predict</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/about">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container text-center">
+            <h1 class="display-3 fw-bold mb-3">About PneumoAI</h1>
+            <p class="lead">Deep Learning for Medical Image Analysis</p>
+        </div>
+    </div>
+
+    <!-- Project Overview -->
+    <div class="content-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <h2 class="section-title">Project Overview</h2>
+                    <p class="lead">
+                        PneumoAI is an end-to-end deep learning project that leverages state-of-the-art convolutional neural networks 
+                        to detect pneumonia from chest X-ray images. This project demonstrates the practical application of artificial 
+                        intelligence in medical diagnostics.
+                    </p>
+                    
+                    <p>
+                        Pneumonia is a serious lung infection that affects millions of people worldwide. Early and accurate detection 
+                        is crucial for effective treatment. This project aims to assist medical professionals by providing rapid, 
+                        AI-powered preliminary screening of chest X-rays.
+                    </p>
+
+                    <div class="architecture-box">
+                        <h5 class="mb-3"><i class="fas fa-network-wired me-2"></i> Technical Architecture</h5>
+                        <p class="mb-2"><strong>Model:</strong> VGG16 with Transfer Learning</p>
+                        <p class="mb-2"><strong>Input Size:</strong> 224×224×3 RGB images</p>
+                        <p class="mb-2"><strong>Framework:</strong> TensorFlow / Keras</p>
+                        <p class="mb-0"><strong>Deployment:</strong> Flask Web Application</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Performance Metrics -->
+    <div class="content-section bg-light">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Model Performance</h2>
+                <p class="lead text-muted">Evaluated on 624 test images</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <div class="metric-value">88.46%</div>
+                        <div class="metric-label">Test Accuracy</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="metric-value">0.9468</div>
+                        <div class="metric-label">AUC Score</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-images"></i>
+                        </div>
+                        <div class="metric-value">5,856</div>
+                        <div class="metric-label">Training Images</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Technology Stack -->
+    <div class="content-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <h2 class="section-title">Technology Stack</h2>
+                    
+                    <h5 class="mt-4 mb-3">Deep Learning & ML</h5>
+                    <div class="mb-4">
+                        <span class="tech-badge"><i class="fab fa-python me-2"></i> Python 3.12</span>
+                        <span class="tech-badge">TensorFlow 2.x</span>
+                        <span class="tech-badge">Keras</span>
+                        <span class="tech-badge">NumPy</span>
+                        <span class="tech-badge">Scikit-learn</span>
+                    </div>
+                    
+                    <h5 class="mb-3">Web Development</h5>
+                    <div class="mb-4">
+                        <span class="tech-badge">Flask</span>
+                        <span class="tech-badge">Bootstrap 5</span>
+                        <span class="tech-badge">HTML5 / CSS3</span>
+                        <span class="tech-badge">JavaScript</span>
+                    </div>
+                    
+                    <h5 class="mb-3">Model Architecture</h5>
+                    <div>
+                        <span class="tech-badge">VGG16 (ImageNet)</span>
+                        <span class="tech-badge">Transfer Learning</span>
+                        <span class="tech-badge">Binary Classification</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dataset Information -->
+    <div class="content-section bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <h2 class="section-title">Dataset Information</h2>
+                    
+                    <div class="architecture-box">
+                        <h5 class="mb-3"><i class="fas fa-database me-2"></i> Chest X-Ray Images (Pneumonia)</h5>
+                        <p><strong>Source:</strong> Kaggle - Paul Mooney</p>
+                        <p><strong>Total Images:</strong> 5,856 chest X-ray images</p>
+                        <p><strong>Classes:</strong></p>
+                        <ul>
+                            <li>NORMAL: 1,583 images (27%)</li>
+                            <li>PNEUMONIA: 4,273 images (73%)</li>
+                        </ul>
+                        <p><strong>Image Format:</strong> JPEG</p>
+                        <p class="mb-0"><strong>Split:</strong> Train (5,216) / Validation (16) / Test (624)</p>
+                    </div>
+
+                    <h5 class="mt-4 mb-3">Data Preprocessing</h5>
+                    <ul class="feature-list">
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <strong>Image Resizing:</strong> All images resized to 224×224 pixels
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <strong>Normalization:</strong> Pixel values scaled to [0, 1] range
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <strong>Data Augmentation:</strong> Rotation, shifting, zoom, and horizontal flip
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <strong>Class Weighting:</strong> Balanced to handle class imbalance
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Model Details -->
+    <div class="content-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <h2 class="section-title">Model Architecture</h2>
+                    
+                    <h5 class="mb-3">Transfer Learning Approach</h5>
+                    <p>
+                        This project utilizes <strong>VGG16</strong>, a powerful convolutional neural network pre-trained on ImageNet 
+                        (1.4 million images, 1000 classes). Transfer learning allows us to leverage the feature extraction capabilities 
+                        learned from millions of images and fine-tune them for our specific pneumonia detection task.
+                    </p>
+
+                    <div class="architecture-box">
+                        <h6 class="mb-3">Network Layers</h6>
+                        <ol class="mb-0">
+                            <li><strong>VGG16 Base Model</strong> (frozen weights)
+                                <ul>
+                                    <li>13 Convolutional layers</li>
+                                    <li>5 Max Pooling layers</li>
+                                    <li>Pre-trained on ImageNet</li>
+                                </ul>
+                            </li>
+                            <li><strong>Global Average Pooling</strong> - Reduces spatial dimensions</li>
+                            <li><strong>Dense Layer</strong> (128 neurons, ReLU) - Feature combination</li>
+                            <li><strong>Dropout</strong> (0.5) - Prevents overfitting</li>
+                            <li><strong>Output Layer</strong> (1 neuron, Sigmoid) - Binary classification</li>
+                        </ol>
+                    </div>
+
+                    <h5 class="mt-4 mb-3">Training Configuration</h5>
+                    <ul class="feature-list">
+                        <li>
+                            <i class="fas fa-cog"></i>
+                            <strong>Optimizer:</strong> Adam (Adaptive learning rate)
+                        </li>
+                        <li>
+                            <i class="fas fa-cog"></i>
+                            <strong>Loss Function:</strong> Binary Crossentropy
+                        </li>
+                        <li>
+                            <i class="fas fa-cog"></i>
+                            <strong>Batch Size:</strong> 32 images per batch
+                        </li>
+                        <li>
+                            <i class="fas fa-cog"></i>
+                            <strong>Epochs:</strong> 10 (with early stopping)
+                        </li>
+                        <li>
+                            <i class="fas fa-cog"></i>
+                            <strong>Early Stopping:</strong> Patience of 5 epochs on validation loss
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How It Works -->
+    <div class="content-section bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <h2 class="section-title">How It Works</h2>
+                    
+                    <h5 class="mb-3">Prediction Pipeline</h5>
+                    <ol class="feature-list" style="list-style-position: inside;">
+                        <li>
+                            <strong>Image Upload:</strong> User uploads a chest X-ray image through the web interface
+                        </li>
+                        <li>
+                            <strong>Preprocessing:</strong> Image is resized to 224×224 and normalized
+                        </li>
+                        <li>
+                            <strong>Feature Extraction:</strong> VGG16 base model extracts high-level features
+                        </li>
+                        <li>
+                            <strong>Classification:</strong> Custom layers process features and predict probability
+                        </li>
+                        <li>
+                            <strong>Result:</strong> Output shows prediction (Normal/Pneumonia) with confidence score
+                        </li>
+                    </ol>
+
+                    <h5 class="mt-4 mb-3">Understanding the Output</h5>
+                    <p>
+                        The model outputs a probability score between 0 and 1:
+                    </p>
+                    <ul>
+                        <li><strong>Probability &gt; 0.5:</strong> Classified as PNEUMONIA</li>
+                        <li><strong>Probability &lt; 0.5:</strong> Classified as NORMAL</li>
+                    </ul>
+                    <p>
+                        The confidence score represents how certain the model is about its prediction. Higher confidence 
+                        indicates stronger evidence for the classification.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="content-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="disclaimer-box">
+                        <h4 class="mb-3"><i class="fas fa-exclamation-triangle me-2"></i> Important Disclaimer</h4>
+                        <p class="mb-2">
+                            <strong>This application is designed for educational and demonstration purposes only.</strong>
+                        </p>
+                        <ul class="mb-2">
+                            <li>This tool should NOT be used as a substitute for professional medical diagnosis</li>
+                            <li>The AI model may produce false positives or false negatives</li>
+                            <li>Always consult qualified healthcare professionals for medical decisions</li>
+                            <li>Results are based on image quality and may vary</li>
+                            <li>No patient data is stored or transmitted</li>
+                        </ul>
+                        <p class="mb-0">
+                            <strong>If you have medical concerns, please seek immediate professional medical attention.</strong>
+                        </p>
+                    </div>
+
+                    <h2 class="section-title mt-5">Project Goals</h2>
+                    <p>
+                        The primary objectives of this project are:
+                    </p>
+                    <ul class="feature-list">
+                        <li>
+                            <i class="fas fa-graduation-cap"></i>
+                            Demonstrate practical application of deep learning in healthcare
+                        </li>
+                        <li>
+                            <i class="fas fa-graduation-cap"></i>
+                            Showcase transfer learning and CNN architectures
+                        </li>
+                        <li>
+                            <i class="fas fa-graduation-cap"></i>
+                            Build end-to-end ML pipeline from data to deployment
+                        </li>
+                        <li>
+                            <i class="fas fa-graduation-cap"></i>
+                            Create an accessible, user-friendly web interface
+                        </li>
+                        <li>
+                            <i class="fas fa-graduation-cap"></i>
+                            Explore AI's potential in medical image analysis
+                        </li>
+                    </ul>
+
+                    <h2 class="section-title mt-5">Future Improvements</h2>
+                    <ul class="feature-list">
+                        <li>
+                            <i class="fas fa-lightbulb"></i>
+                            Implement Grad-CAM for model interpretability
+                        </li>
+                        <li>
+                            <i class="fas fa-lightbulb"></i>
+                            Expand to multi-class classification (bacterial vs viral pneumonia)
+                        </li>
+                        <li>
+                            <i class="fas fa-lightbulb"></i>
+                            Add ensemble models for improved accuracy
+                        </li>
+                        <li>
+                            <i class="fas fa-lightbulb"></i>
+                            Integrate DICOM image support
+                        </li>
+                        <li>
+                            <i class="fas fa-lightbulb"></i>
+                            Develop mobile application
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="text-center">
+                <h5 class="mb-3"><i class="fas fa-lungs"></i> PneumoAI</h5>
+                <p class="text-muted mb-3">
+                    An end-to-end deep learning project for pneumonia detection from chest X-rays
+                </p>
+                <p class="mb-0">&copy; 2026 PneumoAI. Educational Deep Learning Project.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

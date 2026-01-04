@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PneumoAI - AI-Powered Pneumonia Detection</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --accent: #f093fb;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white !important;
+        }
+        
+        .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+            margin: 0 10px;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover {
+            color: white !important;
+            transform: translateY(-2px);
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+            opacity: 0.3;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+        
+        .cta-button {
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            background: white;
+            color: var(--primary);
+            border: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            animation: fadeInUp 1s ease-out 0.4s both;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            background: var(--accent);
+            color: white;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .features-section {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+        
+        .feature-card {
+            padding: 40px 30px;
+            border-radius: 20px;
+            background: white;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            height: 100%;
+            border: none;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 2rem;
+            color: white;
+        }
+        
+        .stats-section {
+            padding: 60px 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .how-it-works {
+            padding: 80px 0;
+        }
+        
+        .step-card {
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0 auto 20px;
+        }
+        
+        footer {
+            background: #2d3748;
+            color: white;
+            padding: 40px 0 20px;
+        }
+        
+        .footer-link {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-link:hover {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-lungs"></i> PneumoAI
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/predict">Predict</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-7 hero-content">
+                    <h1 class="hero-title">AI-Powered Pneumonia Detection</h1>
+                    <p class="hero-subtitle">
+                        Advanced deep learning technology for rapid and accurate pneumonia diagnosis from chest X-ray images. 
+                        Get instant AI-powered analysis with 88% accuracy.
+                    </p>
+                    <a href="/predict" class="btn cta-button">
+                        <i class="fas fa-microscope me-2"></i> Try It Now
+                    </a>
+                </div>
+                <div class="col-lg-5 text-center">
+                    <i class="fas fa-x-ray" style="font-size: 15rem; opacity: 0.2;"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 stat-item">
+                    <div class="stat-number">88%</div>
+                    <div class="stat-label">Accuracy</div>
+                </div>
+                <div class="col-md-3 stat-item">
+                    <div class="stat-number">0.94</div>
+                    <div class="stat-label">AUC Score</div>
+                </div>
+                <div class="col-md-3 stat-item">
+                    <div class="stat-number">5,800+</div>
+                    <div class="stat-label">Training Images</div>
+                </div>
+                <div class="col-md-3 stat-item">
+                    <div class="stat-number">&lt;3s</div>
+                    <div class="stat-label">Analysis Time</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold mb-3">Why Choose PneumoAI?</h2>
+                <p class="lead text-muted">Cutting-edge AI technology for medical image analysis</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h4 class="text-center mb-3">Deep Learning</h4>
+                        <p class="text-center text-muted">
+                            Powered by VGG16 transfer learning architecture, trained on thousands of chest X-ray images for accurate predictions.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h4 class="text-center mb-3">Instant Results</h4>
+                        <p class="text-center text-muted">
+                            Get AI-powered analysis in seconds. Upload your X-ray image and receive immediate diagnostic predictions.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4 class="text-center mb-3">High Accuracy</h4>
+                        <p class="text-center text-muted">
+                            Achieved 88% accuracy with 0.94 AUC score on test data, providing reliable diagnostic assistance.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold mb-3">How It Works</h2>
+                <p class="lead text-muted">Simple, fast, and accurate</p>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h5>Upload X-Ray</h5>
+                        <p class="text-muted">Select a chest X-ray image from your device</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h5>AI Analysis</h5>
+                        <p class="text-muted">Our CNN model processes the image</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h5>Get Results</h5>
+                        <p class="text-muted">Receive prediction with confidence score</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <h5>Consult Doctor</h5>
+                        <p class="text-muted">Use results for medical consultation</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-5" style="background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);">
+        <div class="container text-center text-white">
+            <h2 class="mb-4">Ready to Analyze Your X-Ray?</h2>
+            <p class="lead mb-4">Get instant AI-powered pneumonia detection</p>
+            <a href="/predict" class="btn btn-light btn-lg px-5">
+                <i class="fas fa-upload me-2"></i> Upload X-Ray Now
+            </a>
+        </div>
+    </section>
+
+    <footer style="background: #1a202c; color: #ffffff; padding: 60px 0 30px; border-top: 1px solid #2d3748;">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-5">
+                <h5 class="mb-4 text-white fw-bold">About the Developer</h5>
+                <p style="color: #cbd5e0; line-height: 1.8; margin-bottom: 1.5rem;">
+                    Hi, I'm <span style="color: #f093fb; font-weight: 600;">Aakash</span>. 
+                    I am an AI enthusiast focused on deep learning for healthcare. 
+                    This project uses a VGG16 model to detect pneumonia from X-rays.
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="https://github.com/aakash2266" target="_blank" class="btn btn-outline-light btn-sm rounded-circle">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://linkedin.com/in/yourusername" target="_blank" class="btn btn-outline-light btn-sm rounded-circle">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="mailto:your@email.com" class="btn btn-outline-light btn-sm rounded-circle">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-3 offset-md-1">
+                <h5 class="mb-4 text-white fw-bold">Explore</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="/" style="color: #cbd5e0; text-decoration: none;">Home</a></li>
+                    <li class="mb-2"><a href="/predict" style="color: #cbd5e0; text-decoration: none;">AI Predictor</a></li>
+                    <li class="mb-2"><a href="https://github.com/aakash2266" style="color: #cbd5e0; text-decoration: none;">Source Code</a></li>
+                </ul>
+            </div>
+
+            <div class="col-md-3">
+                <h5 class="mb-4 text-white fw-bold">Medical Disclaimer</h5>
+                <div class="p-3 rounded" style="background: rgba(255,255,255,0.05); border-left: 4px solid #f093fb;">
+                    <p style="color: #a0aec0; font-size: 0.85rem; margin-bottom: 0;">
+                        <strong>Note:</strong> This AI model is for <strong>educational purposes</strong> only. 
+                        Always consult a doctor for diagnosis.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-5" style="border-color: rgba(255,255,255,0.1);">
+
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center" style="color: #718096; font-size: 0.85rem;">
+            <p class="mb-2 mb-md-0">&copy; 2026 PneumoAI | Developed by Aakash</p>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
