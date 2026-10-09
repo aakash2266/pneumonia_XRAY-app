@@ -1,507 +1,249 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analyze X-Ray - PneumoAI</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #667eea;
-            --secondary: #764ba2;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f8f9fa;
-        }
-        
-        .navbar {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            padding: 1rem 0;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
-        }
-        
-        .navbar-brand {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: white !important;
-        }
-        
-        .nav-link {
-            color: rgba(255,255,255,0.9) !important;
-            margin: 0 10px;
-            transition: all 0.3s;
-        }
-        
-        .nav-link:hover {
-            color: white !important;
-        }
-        
-        .main-content {
-            padding: 60px 0;
-            min-height: calc(100vh - 200px);
-        }
-        
-        .upload-card {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
-        
-        .upload-area {
-            border: 3px dashed #dee2e6;
-            border-radius: 15px;
-            padding: 60px 20px;
-            text-align: center;
-            transition: all 0.3s;
-            cursor: pointer;
-            background: #f8f9fa;
-        }
-        
-        .upload-area:hover {
-            border-color: var(--primary);
-            background: #fff;
-        }
-        
-        .upload-area.dragover {
-            border-color: var(--primary);
-            background: #f0f4ff;
-        }
-        
-        .upload-icon {
-            font-size: 4rem;
-            color: var(--primary);
-            margin-bottom: 20px;
-        }
-        
-        #preview {
-            max-width: 100%;
-            max-height: 400px;
-            border-radius: 15px;
-            margin-top: 20px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-        
-        .analyze-btn {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            border: none;
-            padding: 15px 50px;
-            font-size: 1.1rem;
-            border-radius: 50px;
-            color: white;
-            font-weight: bold;
-            transition: all 0.3s;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-        }
-        
-        .analyze-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-        }
-        
-        .loader {
-            display: none;
-            text-align: center;
-            padding: 40px;
-        }
-        
-        .spinner {
-            width: 60px;
-            height: 60px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .result-card {
-            display: none;
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            animation: slideUp 0.5s ease-out;
-        }
-        
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .result-header {
-            text-align: center;
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-        }
-        
-        .result-header.success {
-            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-            border: 2px solid #28a745;
-        }
-        
-        .result-header.danger {
-            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
-            border: 2px solid #dc3545;
-        }
-        
-        .result-icon {
-            font-size: 4rem;
-            margin-bottom: 15px;
-        }
-        
-        .result-title {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        
-        .confidence-badge {
-            display: inline-block;
-            padding: 10px 25px;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-        
-        .info-box {
-            background: #f8f9fa;
-            border-left: 4px solid var(--primary);
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-        
-        footer {
-            background: #2d3748;
-            color: white;
-            padding: 30px 0;
-            margin-top: 60px;
-        }
-    </style>
-</head>
-<body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/">
-                <i class="fas fa-lungs"></i> PneumoAI
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/predict">Predict</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/about">About</a>
-                    </li>
-                </ul>
-            </div>
+{% extends "base.html" %}
+
+{% block title %}Analyze Chest X-Ray — PneumoAI{% endblock %}
+
+{% block content %}
+<div class="py-5">
+    <div class="container py-3">
+        <div class="text-center mb-5">
+            <h1 class="display-5 fw-bold mb-3">Analyze Chest X-Ray</h1>
+            <p class="lead text-muted">Upload a chest X-ray image for instant AI-powered pneumonia detection</p>
         </div>
-    </nav>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h1 class="display-4 fw-bold mb-3">Analyze Chest X-Ray</h1>
-                <p class="lead text-muted">Upload a chest X-ray image for AI-powered pneumonia detection</p>
-            </div>
-
-            <!-- Upload Section -->
-            <div class="row justify-content-center" id="uploadSection">
-                <div class="col-lg-8">
-                    <div class="upload-card">
-                        <form id="uploadForm" enctype="multipart/form-data">
-                            <div class="upload-area" id="uploadArea">
-                                <div class="upload-icon">
-                                    <i class="fas fa-cloud-upload-alt"></i>
-                                </div>
-                                <h4 class="mb-3">Drop your X-ray image here</h4>
-                                <p class="text-muted mb-3">or click to browse</p>
-                                <input type="file" class="d-none" id="fileInput" accept="image/*" required>
-                                <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('fileInput').click()">
-                                    <i class="fas fa-folder-open me-2"></i> Choose File
-                                </button>
+        <!-- Upload Section -->
+        <div class="row justify-content-center" id="uploadSection">
+            <div class="col-lg-8">
+                <div class="upload-card">
+                    <form id="uploadForm" enctype="multipart/form-data">
+                        <div class="upload-area" id="uploadArea">
+                            <div class="upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
                             </div>
-                            
-                            <div id="previewSection" style="display:none;">
-                                <div class="text-center mt-4">
-                                    <img id="preview" alt="X-ray preview">
-                                    <div class="mt-4">
-                                        <button type="submit" class="analyze-btn">
-                                            <i class="fas fa-microscope me-2"></i> Analyze X-Ray
-                                        </button>
-                                        <button type="button" class="btn btn-outline-secondary ms-2" onclick="resetUpload()">
-                                            <i class="fas fa-redo me-2"></i> Upload Different Image
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                        
-                        <div class="info-box mt-4">
-                            <h6><i class="fas fa-info-circle me-2"></i> Upload Guidelines</h6>
-                            <ul class="mb-0">
-                                <li>Supported formats: JPG, JPEG, PNG</li>
-                                <li>Ensure the X-ray image is clear and properly oriented</li>
-                                <li>Front-view chest X-rays work best</li>
-                            </ul>
+                            <h4 class="mb-2 fw-bold">Drop your X-ray image here</h4>
+                            <p class="text-muted mb-3">or click anywhere in this area to browse</p>
+                            <input type="file" class="d-none" id="fileInput" accept="image/*" required>
+                            <button type="button" class="btn btn-outline-primary rounded-pill px-4" id="chooseFileBtn">
+                                <i class="fas fa-folder-open me-2"></i> Choose File
+                            </button>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Loader -->
-            <div class="loader" id="loader">
-                <div class="spinner"></div>
-                <h4>Analyzing X-Ray Image...</h4>
-                <p class="text-muted">Our AI model is processing your image</p>
-            </div>
-
-            <!-- Results Section -->
-            <div class="row justify-content-center" id="resultsSection">
-                <div class="col-lg-10">
-                    <div class="result-card" id="resultCard">
-                        <div class="row">
-                            <div class="col-md-5">
-                                <h5 class="mb-3">Uploaded X-Ray</h5>
-                                <img id="resultImage" class="img-fluid rounded shadow">
-                            </div>
-                            <div class="col-md-7">
-                                <div class="result-header" id="resultHeader">
-                                    <div class="result-icon" id="resultIcon"></div>
-                                    <div class="result-title" id="resultTitle"></div>
-                                    <div class="confidence-badge" id="confidenceBadge"></div>
-                                </div>
-                                
-                                <div class="mt-4">
-                                    <h5 class="mb-3"><i class="fas fa-notes-medical me-2"></i> Recommendation</h5>
-                                    <p id="recommendation" class="lead"></p>
-                                </div>
-                                
-                                <div class="info-box">
-                                    <h6><i class="fas fa-exclamation-triangle me-2"></i> Important Notice</h6>
-                                    <p class="mb-0 small">
-                                        This AI analysis is for educational and informational purposes only. 
-                                        It should not replace professional medical diagnosis. Always consult 
-                                        with qualified healthcare professionals for accurate diagnosis and treatment.
-                                    </p>
-                                </div>
-                                
-                                <div class="text-center mt-4">
-                                    <button class="btn btn-primary btn-lg" onclick="resetAll()">
-                                        <i class="fas fa-redo me-2"></i> Analyze Another X-Ray
+                        
+                        <div id="previewSection" style="display:none;">
+                            <div class="text-center mt-3">
+                                <img id="preview" alt="X-ray image preview">
+                                <div class="mt-4 d-flex justify-content-center gap-3">
+                                    <button type="submit" class="analyze-btn">
+                                        <i class="fas fa-microscope me-2"></i> Analyze X-Ray
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" onclick="resetUpload()">
+                                        <i class="fas fa-redo me-2"></i> Change Image
                                     </button>
                                 </div>
                             </div>
                         </div>
+                    </form>
+                    
+                    <div class="info-box mt-4">
+                        <h6 class="fw-bold mb-2"><i class="fas fa-info-circle me-2 text-primary"></i> Upload Guidelines</h6>
+                        <ul class="mb-0 text-muted small">
+                            <li>Supported image formats: JPG, JPEG, PNG, WEBP</li>
+                            <li>Use frontal chest X-ray images for maximum classification accuracy</li>
+                            <li>Ensure image resolution is clear without heavy occlusion</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loader -->
+        <div class="loader" id="loader">
+            <div class="spinner"></div>
+            <h4 class="fw-bold text-primary mb-2">Analyzing Chest X-Ray...</h4>
+            <p class="text-muted">Extracting feature vectors using VGG16 model</p>
+        </div>
+
+        <!-- Results Section -->
+        <div class="row justify-content-center" id="resultsSection">
+            <div class="col-lg-10">
+                <div class="result-card" id="resultCard">
+                    <div class="row g-4 align-items-center">
+                        <div class="col-md-5 text-center">
+                            <h5 class="fw-bold mb-3">Uploaded Image</h5>
+                            <img id="resultImage" class="img-fluid rounded shadow-sm" alt="Uploaded X-ray scan">
+                        </div>
+                        <div class="col-md-7">
+                            <div class="result-header" id="resultHeader">
+                                <div class="result-icon" id="resultIcon"></div>
+                                <div class="result-title" id="resultTitle"></div>
+                                <div class="confidence-badge" id="confidenceBadge"></div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <h5 class="fw-bold mb-2"><i class="fas fa-notes-medical me-2 text-primary"></i> Clinical Recommendation</h5>
+                                <p id="recommendation" class="lead text-dark fs-6"></p>
+                            </div>
+                            
+                            <div class="info-box mt-4">
+                                <h6 class="fw-bold mb-1"><i class="fas fa-exclamation-triangle me-2 text-warning"></i> Educational Disclaimer</h6>
+                                <p class="mb-0 small text-muted">
+                                    This model evaluation is strictly for educational and technical demonstration purposes. 
+                                    It should never replace professional clinical diagnostics or specialist medical consultations.
+                                </p>
+                            </div>
+                            
+                            <div class="text-center mt-4">
+                                <button class="btn btn-primary btn-lg rounded-pill px-5 fw-bold" onclick="resetAll()">
+                                    <i class="fas fa-redo me-2"></i> Analyze Another Image
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+{% endblock %}
 
-    <footer style="background: #1a202c; color: #ffffff; padding: 60px 0 30px; border-top: 1px solid #2d3748;">
-    <div class="container">
-        <div class="row g-4">
-            <div class="col-md-5">
-                <h5 class="mb-4 text-white fw-bold">About the Developer</h5>
-                <p style="color: #cbd5e0; line-height: 1.8; margin-bottom: 1.5rem;">
-                    Hi, I'm <span style="color: #f093fb; font-weight: 600;">Aakash</span>. 
-                    I am an AI enthusiast focused on deep learning for healthcare. 
-                    This project uses a VGG16 model to detect pneumonia from X-rays.
-                </p>
-                <div class="d-flex gap-3">
-                    <a href="https://github.com/aakash2266" target="_blank" class="btn btn-outline-light btn-sm rounded-circle">
-                        <i class="fab fa-github"></i>
-                    </a>
-                    <a href="https://linkedin.com/in/yourusername" target="_blank" class="btn btn-outline-light btn-sm rounded-circle">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    <a href="mailto:your@email.com" class="btn btn-outline-light btn-sm rounded-circle">
-                        <i class="fas fa-envelope"></i>
-                    </a>
-                </div>
-            </div>
+{% block scripts %}
+<script>
+    const uploadArea = document.getElementById('uploadArea');
+    const chooseFileBtn = document.getElementById('chooseFileBtn');
+    const fileInput = document.getElementById('fileInput');
+    const preview = document.getElementById('preview');
+    const previewSection = document.getElementById('previewSection');
+    const uploadForm = document.getElementById('uploadForm');
+    const loader = document.getElementById('loader');
+    const uploadSection = document.getElementById('uploadSection');
+    const resultCard = document.getElementById('resultCard');
 
-            <div class="col-md-3 offset-md-1">
-                <h5 class="mb-4 text-white fw-bold">Explore</h5>
-                <ul class="list-unstyled">
-                    <li class="mb-2"><a href="/" style="color: #cbd5e0; text-decoration: none;">Home</a></li>
-                    <li class="mb-2"><a href="/predict" style="color: #cbd5e0; text-decoration: none;">AI Predictor</a></li>
-                    <li class="mb-2"><a href="https://github.com/aakash2266" style="color: #cbd5e0; text-decoration: none;">Source Code</a></li>
-                </ul>
-            </div>
+    // Trigger file chooser without double event propagation
+    uploadArea.addEventListener('click', (e) => {
+        if (e.target !== chooseFileBtn) {
+            fileInput.click();
+        }
+    });
 
-            <div class="col-md-3">
-                <h5 class="mb-4 text-white fw-bold">Medical Disclaimer</h5>
-                <div class="p-3 rounded" style="background: rgba(255,255,255,0.05); border-left: 4px solid #f093fb;">
-                    <p style="color: #a0aec0; font-size: 0.85rem; margin-bottom: 0;">
-                        <strong>Note:</strong> This AI model is for <strong>educational purposes</strong> only. 
-                        Always consult a doctor for diagnosis.
-                    </p>
-                </div>
-            </div>
-        </div>
+    chooseFileBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        fileInput.click();
+    });
+    
+    // Drag and drop handlers
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+    });
+    
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('dragover');
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+            handleFileSelect();
+        }
+    });
 
-        <hr class="my-5" style="border-color: rgba(255,255,255,0.1);">
+    // File selection handler
+    fileInput.addEventListener('change', handleFileSelect);
 
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center" style="color: #718096; font-size: 0.85rem;">
-            <p class="mb-2 mb-md-0">&copy; 2026 PneumoAI | Developed by Aakash</p>
-        </div>
-    </div>
-</footer>
+    function handleFileSelect() {
+        const file = fileInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                preview.src = e.target.result;
+                previewSection.style.display = 'block';
+                uploadArea.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+    }
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('fileInput');
-        const preview = document.getElementById('preview');
-        const previewSection = document.getElementById('previewSection');
-        const uploadForm = document.getElementById('uploadForm');
-        const loader = document.getElementById('loader');
-        const uploadSection = document.getElementById('uploadSection');
-        const resultCard = document.getElementById('resultCard');
-
-        // Drag and drop
-        uploadArea.addEventListener('click', () => fileInput.click());
+    // Form submission AJAX
+    uploadForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
         
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('dragover');
-        });
-        
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('dragover');
-        });
-        
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-            const files = e.dataTransfer.files;
-            if (files.length) {
-                fileInput.files = files;
-                handleFileSelect();
-            }
-        });
-
-        // File input change
-        fileInput.addEventListener('change', handleFileSelect);
-
-        function handleFileSelect() {
-            const file = fileInput.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    preview.src = e.target.result;
-                    previewSection.style.display = 'block';
-                    uploadArea.style.display = 'none';
-                };
-                reader.readAsDataURL(file);
-            }
+        if (!fileInput.files || fileInput.files.length === 0) {
+            alert('Please select an image file first.');
+            return;
         }
 
-        // Form submission
-        uploadForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+        
+        // Show loader state
+        uploadSection.style.display = 'none';
+        loader.style.display = 'block';
+        
+        try {
+            const response = await fetch('/analyze', {
+                method: 'POST',
+                body: formData
+            });
             
-            const formData = new FormData();
-            formData.append('file', fileInput.files[0]);
+            const data = await response.json();
             
-            // Show loader
-            uploadSection.style.display = 'none';
-            loader.style.display = 'block';
-            
-            try {
-                const response = await fetch('/analyze', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                const data = await response.json();
-                
-                if (data.error) {
-                    alert('Error: ' + data.error);
-                    resetAll();
-                    return;
-                }
-                
-                // Hide loader, show results
-                loader.style.display = 'none';
-                showResults(data);
-                
-            } catch (error) {
-                alert('Error analyzing image. Please try again.');
+            if (!response.ok || data.error) {
+                alert('Error: ' + (data.error || 'Failed to analyze image.'));
                 resetAll();
-            }
-        });
-
-        function showResults(data) {
-            // Set result image
-            document.getElementById('resultImage').src = data.image_url;
-            
-            // Set result header
-            const resultHeader = document.getElementById('resultHeader');
-            const resultIcon = document.getElementById('resultIcon');
-            const resultTitle = document.getElementById('resultTitle');
-            const confidenceBadge = document.getElementById('confidenceBadge');
-            const recommendation = document.getElementById('recommendation');
-            
-            resultHeader.className = 'result-header ' + data.result_class;
-            
-            if (data.result_class === 'success') {
-                resultIcon.innerHTML = '<i class="fas fa-check-circle text-success"></i>';
-                confidenceBadge.className = 'confidence-badge bg-success text-white';
-            } else {
-                resultIcon.innerHTML = '<i class="fas fa-exclamation-circle text-danger"></i>';
-                confidenceBadge.className = 'confidence-badge bg-danger text-white';
+                return;
             }
             
-            resultTitle.textContent = data.result;
-            confidenceBadge.textContent = 'Confidence: ' + data.confidence;
-            recommendation.textContent = data.recommendation;
-            
-            // Show result card
-            resultCard.style.display = 'block';
-        }
-
-        function resetUpload() {
-            fileInput.value = '';
-            previewSection.style.display = 'none';
-            uploadArea.style.display = 'block';
-        }
-
-        function resetAll() {
-            resetUpload();
-            uploadSection.style.display = 'block';
+            // Hide loader and show result card
             loader.style.display = 'none';
-            resultCard.style.display = 'none';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showResults(data);
+            
+        } catch (error) {
+            alert('An unexpected error occurred while processing your request. Please try again.');
+            resetAll();
         }
-    </script>
-</body>
-</html>
+    });
+
+    function showResults(data) {
+        // Display uploaded image from local Data URL preview
+        document.getElementById('resultImage').src = preview.src;
+        
+        const resultHeader = document.getElementById('resultHeader');
+        const resultIcon = document.getElementById('resultIcon');
+        const resultTitle = document.getElementById('resultTitle');
+        const confidenceBadge = document.getElementById('confidenceBadge');
+        const recommendation = document.getElementById('recommendation');
+        
+        resultHeader.className = 'result-header ' + data.result_class;
+        
+        if (data.result_class === 'success') {
+            resultIcon.innerHTML = '<i class="fas fa-check-circle text-success"></i>';
+            confidenceBadge.className = 'confidence-badge bg-success text-white';
+        } else {
+            resultIcon.innerHTML = '<i class="fas fa-exclamation-circle text-danger"></i>';
+            confidenceBadge.className = 'confidence-badge bg-danger text-white';
+        }
+        
+        resultTitle.textContent = data.result;
+        confidenceBadge.textContent = 'Confidence: ' + data.confidence;
+        recommendation.textContent = data.recommendation;
+        
+        resultCard.style.display = 'block';
+    }
+
+    function resetUpload() {
+        fileInput.value = '';
+        preview.src = '';
+        previewSection.style.display = 'none';
+        uploadArea.style.display = 'block';
+    }
+
+    function resetAll() {
+        resetUpload();
+        uploadSection.style.display = 'block';
+        loader.style.display = 'none';
+        resultCard.style.display = 'none';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+</script>
+{% endblock %}
