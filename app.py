@@ -1,22 +1,19 @@
 import os
+import traceback
+import numpy as np
+from PIL import Image
+from flask import Flask, jsonify, render_template, request
 
 # =========================
-# RENDER + TENSORFLOW SAFETY
+# TENSORFLOW & CUDA SETUP
 # =========================
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
 import tensorflow as tf
+
 tf.config.threading.set_intra_op_parallelism_threads(1)
 tf.config.threading.set_inter_op_parallelism_threads(1)
-
-# =========================
-# STANDARD IMPORTS
-# =========================
-from flask import Flask, render_template, request, jsonify, url_for
-import numpy as np
-from PIL import Image
-from tensorflow import keras
 
 # =========================
 # APP SETUP
@@ -29,8 +26,10 @@ os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "webp", "bmp"}
 
+
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 # =========================
 # LOAD MODEL (ABSOLUTE PATH)
@@ -38,7 +37,8 @@ def allowed_file(filename):
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, "pneumonia_model.keras")
 
-model = keras.models.load_model(MODEL_PATH)
+model = tf.keras.models.load_model(MODEL_PATH)
+
 
 # =========================
 # ROUTES
@@ -70,7 +70,9 @@ def analyze():
             return jsonify({"error": "No image file selected."}), 400
 
         if not allowed_file(file.filename):
-            return jsonify({"error": "Unsupported file format. Please upload a valid image (JPG, JPEG, PNG, WEBP, BMP)."}), 400
+            return jsonify({
+                "error": "Unsupported file format. Please upload a valid image (JPG, JPEG, PNG, WEBP, BMP)."
+            }), 400
 
         # =========================
         # IMAGE PROCESSING (IN-MEMORY)
@@ -80,7 +82,7 @@ def analyze():
         except Exception:
             return jsonify({"error": "Failed to read image. Please ensure the file is a valid image."}), 400
 
-        # Pillow 10+ compatibility for resampling filter
+        # Pillow compatibility for bilinear resampling filter
         resample_filter = getattr(getattr(Image, "Resampling", Image), "BILINEAR", Image.BILINEAR)
         img = img.resize((224, 224), resample_filter)
 
@@ -118,7 +120,6 @@ def analyze():
         })
 
     except Exception as e:
-        import traceback
         print("ANALYZE ERROR:", str(e))
         traceback.print_exc()
         return jsonify({"error": "An error occurred during prediction. Please try again."}), 500
